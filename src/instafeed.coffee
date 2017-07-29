@@ -226,34 +226,32 @@ class Instafeed
       else
         # loop through the images
         for image in images
-          # create the image using the @options's resolution
-          img = document.createElement 'img'
-
-          # use protocol relative image url
-          imageObj = image.images[@options.resolution]
-          if typeof imageObj isnt 'object'
-            eMsg = "No image found for resolution: #{@options.resolution}."
-            throw new Error eMsg
-
-          # use protocol relative image url
-          imageUrl = imageObj.url
-          httpProtocol = window.location.protocol.indexOf("http") >= 0
-          if httpProtocol and !@options.useHttp
-            imageUrl = imageUrl.replace(/https?:\/\//, '//')
-
-          img.src = imageUrl
+        
 
           # wrap the image in an anchor tag, unless turned off
           if @options.links is true
             # create an anchor link
+
             anchor = document.createElement 'a'
             anchor.href = image.link
 
-            # add the image to it
-            anchor.appendChild img
+            imageObj = image.images[@options.resolution]
+            if typeof imageObj isnt 'object'
+              eMsg = "No image found for resolution: #{@options.resolution}."
+              throw new Error eMsg
 
+            # use protocol relative image url
+            imageUrl = imageObj.url
+            httpProtocol = window.location.protocol.indexOf("http") >= 0
+            if httpProtocol and !@options.useHttp
+              imageUrl = imageUrl.replace(/https?:\/\//, '//')
+
+            # add the image to it
+            anchor.style.backgroundImage = "url('" + imageUrl + "')"
+  
             # add the anchor to the fragment
             fragment.appendChild anchor
+
           else
             # add the image (without link) to the fragment
             fragment.appendChild img

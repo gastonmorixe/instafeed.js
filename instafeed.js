@@ -64,7 +64,7 @@
     };
 
     Instafeed.prototype.parse = function(response) {
-      var anchor, childNodeCount, childNodeIndex, childNodesArr, e, eMsg, fragment, header, htmlString, httpProtocol, i, image, imageObj, imageString, imageUrl, images, img, imgHeight, imgOrient, imgUrl, imgWidth, instanceName, j, k, len, len1, len2, node, parsedLimit, reverse, sortSettings, targetEl, tmpEl;
+      var anchor, childNodeCount, childNodeIndex, childNodesArr, e, eMsg, fragment, header, htmlString, httpProtocol, i, image, imageObj, imageString, imageUrl, images, imgHeight, imgOrient, imgUrl, imgWidth, instanceName, j, k, len, len1, len2, node, parsedLimit, reverse, sortSettings, targetEl, tmpEl;
       if (typeof response !== 'object') {
         if ((this.options.error != null) && typeof this.options.error === 'function') {
           this.options.error.call(this, 'Invalid JSON data');
@@ -189,22 +189,20 @@
         } else {
           for (k = 0, len2 = images.length; k < len2; k++) {
             image = images[k];
-            img = document.createElement('img');
-            imageObj = image.images[this.options.resolution];
-            if (typeof imageObj !== 'object') {
-              eMsg = "No image found for resolution: " + this.options.resolution + ".";
-              throw new Error(eMsg);
-            }
-            imageUrl = imageObj.url;
-            httpProtocol = window.location.protocol.indexOf("http") >= 0;
-            if (httpProtocol && !this.options.useHttp) {
-              imageUrl = imageUrl.replace(/https?:\/\//, '//');
-            }
-            img.src = imageUrl;
             if (this.options.links === true) {
               anchor = document.createElement('a');
               anchor.href = image.link;
-              anchor.appendChild(img);
+              imageObj = image.images[this.options.resolution];
+              if (typeof imageObj !== 'object') {
+                eMsg = "No image found for resolution: " + this.options.resolution + ".";
+                throw new Error(eMsg);
+              }
+              imageUrl = imageObj.url;
+              httpProtocol = window.location.protocol.indexOf("http") >= 0;
+              if (httpProtocol && !this.options.useHttp) {
+                imageUrl = imageUrl.replace(/https?:\/\//, '//');
+              }
+              anchor.style.backgroundImage = "url('" + imageUrl + "')";
               fragment.appendChild(anchor);
             } else {
               fragment.appendChild(img);
